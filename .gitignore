@@ -15,6 +15,5 @@ gen
 HELP.md
 mvnw
 mvnw.cmd
-pom.xml
 spider.iml
 target/
