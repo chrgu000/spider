@@ -16,6 +16,10 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <jsoup.version>1.8.3</jsoup.version>
+        <fastjson.version>1.2.56</fastjson.version>
+        <okhttp.version>3.14.0</okhttp.version>
+        <httpclinet>4.5.8</httpclinet>
     </properties>
 
     <dependencies>
@@ -29,6 +33,39 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+
+        <!--mongodb依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>${jsoup.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>${okhttp.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>${httpclinet}</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>

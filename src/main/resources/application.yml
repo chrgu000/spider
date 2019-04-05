@@ -1,0 +1,19 @@
+
+
+
+#日志级别从低到高分为TRACE < DEBUG < INFO < WARN < ERROR < FATAL，如果设置为WARN，则低于WARN的信息都不会输出
+logging:
+  level:
+    root: info
+  path: /Users/natan/logs/spring-boot-logback
+
+
+
+spring:
+  data:
+    mongodb:
+      uri: mongodb://admin:FOngCmI*k&9mpeGo@47.244.38.170/crawler
+
+
+server:
+  port: 8088
