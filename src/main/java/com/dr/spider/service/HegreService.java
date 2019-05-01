@@ -4,6 +4,7 @@ import com.dr.spider.base.SpiderInfo;
 import com.dr.spider.model.BaseVideo;
 import com.dr.spider.utils.MD5;
 import com.dr.spider.utils.OkHttpUtils;
+import java.util.List;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -17,34 +18,39 @@ import org.springframework.stereotype.Service;
 @Service
 public class HegreService {
 
+  public final static Logger logger = LoggerFactory.getLogger(HegreService.class);
 
-    public final static Logger logger = LoggerFactory.getLogger(HegreService.class);
+  @Autowired
+  private MongoTemplate mongoTemplate;
 
-    @Autowired
-    private MongoTemplate mongoTemplate;
+  public Object crawler(SpiderInfo spiderInfo) {
+    List list = null;
+    BaseVideo video = new BaseVideo();
+    try {
+      String html = new OkHttpUtils(spiderInfo.getUrl()).addCookie(spiderInfo.getWebCookie())
+          .sendGet();
+      Document doc = Jsoup.parse(html);
+      Elements eles = doc.select(".item");
+      String videoDetailUrl, sn, title, coverImg;
+      for (Element ele : eles) {
+        videoDetailUrl = spiderInfo.getHost() + ele.select("a").first().attr("href");
 
-    public Object crawler(SpiderInfo spiderInfo) {
-        BaseVideo video;
-        try {
-            String html = new OkHttpUtils(spiderInfo.getUrl()).sendGet();
-            Document doc = Jsoup.parse(html);
-            Elements eles = doc.select(".video_list li");
-            String videoDetailUrl, sn, title, coverImg;
-            for (Element ele : eles) {
-                videoDetailUrl = ele.select("a").first().attr("href");
-                sn = MD5.encode(spiderInfo.getWebCode() + "_" + ele.id());
-                title = ele.select("a").first().attr("title");
-                coverImg = ele.select("img").first().attr("src");
-                System.out.println(videoDetailUrl + "    " + title + "    " + coverImg);
-
-
-                video = new BaseVideo();
-
-
-            }
-        } catch (Exception e) {
-
-        }
-        return mongoTemplate.findAll(BaseVideo.class);
+        System.out.println(videoDetailUrl);
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
     }
+    // list = mongoTemplate.findAll(BaseVideo.class);
+    return list;
+  }
+
+  public static void main(String[] args) {
+    SpiderInfo si = new SpiderInfo();
+    si.setUrl("https://www.hegre.com/films?films_page=1");
+    si.setWebCookie(
+        "_retina=0; _width=2560; _ga=GA1.2.411007182.1556615059; _gid=GA1.2.212494572.1556615059; __auc=4beda20a16a6d7cd8ccac919d9e; _www.hegre.com_session=BAh7CToPc2Vzc2lvbl9pZEkiJWVjODM1MWYzMDliN2ZmYTBmYjAxZWIxNmNjZTc2NTFjBjoGRUY6EF9jc3JmX3Rva2VuSSIxS1R2S0t3M0VQaVo4N2NqQWpvZ2hvSk5FdHhaaHIzVzR4VWNwL2UzMlJYMD0GOwZGSSIKZmxhc2gGOwZUSUM6J0FjdGlvbkNvbnRyb2xsZXI6OkZsYXNoOjpGbGFzaEhhc2h7AAY6CkB1c2VkewA6FWJhY2tncm91bmRfY292ZXJJIhRwcm9maWxlLWNvdmVyLTYGOwZU--65c238a4094f00309d683f1341f837835ba4ae3e; stay-in-touch=0");
+    si.setWebCode(1000);
+    HegreService service = new HegreService();
+    service.crawler(si);
+  }
 }

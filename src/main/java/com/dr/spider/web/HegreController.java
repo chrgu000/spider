@@ -16,7 +16,7 @@ public class HegreController extends BaseController {
     public void init(){
         spiderInfo=new SpiderInfo();
         spiderInfo.setUrl("https://www.hegre.com");
-        spiderInfo.setWebCode(100001);
+        spiderInfo.setWebCode(1000);
     }
 
 

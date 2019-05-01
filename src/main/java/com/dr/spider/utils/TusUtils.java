@@ -13,7 +13,8 @@ public class TusUtils {
 
     public final static Logger logger = LoggerFactory.getLogger(TusUtils.class);
 
-    public static void update(String url, File file, Map metadata) {
+    public static String update(String url, File file, Map metadata) {
+        final String[] result = new String[1];
         TusClient client = new TusClient();
         try {
             client.setUploadCreationURL(new URL(url));
@@ -38,12 +39,14 @@ public class TusUtils {
                         System.out.printf("Upload at %06.2f%%.\n", progress);
                     } while (uploader.uploadChunk() > -1);
                     uploader.finish();
-
+                    result[0] = uploader.getUploadURL().toString();
                     System.out.println("Upload finished.");
-                    System.out.format("Upload available at: %s", uploader.getUploadURL().toString());
+                    System.out.format("Upload available at: %s", result[0]);
+
                 }
             };
             executor.makeAttempts();
+
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
@@ -53,5 +56,6 @@ public class TusUtils {
         } catch (ProtocolException e) {
             e.printStackTrace();
         }
+        return result[0];
     }
 }
