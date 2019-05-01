@@ -17,10 +17,6 @@ public class BaseVideo {
     // 状态 0:没有
     private Integer status;
 
-    @Field("sn")
-    // 唯一字符串标识
-    private String sn;
-
     @Field("webCode")
     // 网站唯一标识
     private Integer webCode;
@@ -59,14 +55,6 @@ public class BaseVideo {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getSn() {
-        return sn;
-    }
-
-    public void setSn(String sn) {
-        this.sn = sn;
     }
 
     public Integer getWebCode() {

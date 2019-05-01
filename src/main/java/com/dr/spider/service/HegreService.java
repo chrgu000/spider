@@ -35,6 +35,9 @@ public class HegreService {
       for (Element ele : eles) {
         videoDetailUrl = spiderInfo.getHost() + ele.select("a").first().attr("href");
 
+
+
+
         System.out.println(videoDetailUrl);
       }
     } catch (Exception e) {
