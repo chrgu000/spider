@@ -3,7 +3,7 @@
 
     <!-- 日志根目录-->
     <springProperty scope="context" name="LOG_HOME" source="logging.path"
-                    defaultValue="/Users/natan/logs/spring-boot-logback"/>
+                    defaultValue="/Users/longlongl/logs/spring-boot-logback"/>
 
     <!-- 日志级别 -->
     <springProperty scope="context" name="LOG_ROOT_LEVEL" source="logging.level.root" defaultValue="DEBUG"/>

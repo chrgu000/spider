@@ -1,5 +1,6 @@
 package com.dr.spider.web;
 
+import com.dr.spider.base.BaseController;
 import com.dr.spider.service.PopjavService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -7,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("popjav")
-public class PopjavController {
+@RequestMapping("av/popjav")
+public class PopjavController extends BaseController {
 
     @Autowired
     private PopjavService popjavService;

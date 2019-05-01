@@ -5,7 +5,7 @@
 logging:
   level:
     root: info
-  path: /Users/natan/logs/spring-boot-logback
+  path: /Users/longlongl/logs/spring-boot-logback
 
 
 
