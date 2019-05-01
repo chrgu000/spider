@@ -27,7 +27,7 @@ public class OkHttpUtils {
   }
 
   public OkHttpUtils addCookie(String value) {
-    reqBuilder.addHeader("cookie", value);
+    reqBuilder.addHeader("Cookie", value);
     return this;
   }
 
