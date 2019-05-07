@@ -1,6 +1,7 @@
 package com.dr.spider.service;
 
 import com.dr.spider.base.SpiderInfo;
+import com.dr.spider.model.VideoInfo;
 import com.dr.spider.utils.OkHttpUtils;
 import java.util.List;
 import org.jsoup.Jsoup;
@@ -23,7 +24,7 @@ public class HegreService {
 
   public Object crawler(SpiderInfo spiderInfo) {
     List list = null;
-    BaseVideo video = new BaseVideo();
+    VideoInfo video = new VideoInfo();
     try {
       String html = new OkHttpUtils(spiderInfo.getUrl()).addCookie(spiderInfo.getWebCookie())
           .sendGet();

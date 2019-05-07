@@ -1,5 +1,6 @@
 package com.dr.spider.service;
 
+import com.dr.spider.model.VideoInfo;
 import com.dr.spider.utils.MD5;
 import com.dr.spider.utils.OkHttpUtils;
 
@@ -27,7 +28,7 @@ public class PopjavService {
     private MongoTemplate mongoTemplate;
 
     public Object crawler(String url, int webcode) {
-        BaseVideo video;
+        VideoInfo video;
         try {
             String html = new OkHttpUtils(url).sendGet();
             Document doc = Jsoup.parse(html);
@@ -42,14 +43,14 @@ public class PopjavService {
 
 
 
-                video = new BaseVideo();
+                video = new VideoInfo();
 
 
             }
         } catch (Exception e) {
 
         }
-        return mongoTemplate.findAll(BaseVideo.class);
+        return mongoTemplate.findAll(VideoInfo.class);
     }
 
     public static String videoUrlDecode(String vid) {

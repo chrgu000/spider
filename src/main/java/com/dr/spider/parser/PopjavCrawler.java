@@ -1,14 +1,12 @@
 package com.dr.spider.parser;
 
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
-import cn.edu.hfut.dmic.webcollector.model.Links;
 import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.plugin.rocks.BreadthCrawler;
-import org.jsoup.select.Elements;
 
-public class DemoManualNewsCrawler extends BreadthCrawler {
+public class PopjavCrawler extends BreadthCrawler {
 
-  public DemoManualNewsCrawler(String crawlPath, boolean autoParse) {
+  public PopjavCrawler(String crawlPath, boolean autoParse) {
     super(crawlPath, autoParse);
     // add 5 start pages and set their type to "list"
     //"list" is not a reserved word, you can use other string instead
@@ -37,7 +35,7 @@ public class DemoManualNewsCrawler extends BreadthCrawler {
       crawlDatums.add(page.links(".video>a")).type("content");
     } else if (page.matchType("content")) {
 
-
+      String vid = page.select("#b_vidoza").first().attr("date");
 
 
 
@@ -46,7 +44,7 @@ public class DemoManualNewsCrawler extends BreadthCrawler {
   }
 
   public static void main(String[] args) throws Exception {
-    DemoManualNewsCrawler crawler = new DemoManualNewsCrawler("crawl", false);
+    PopjavCrawler crawler = new PopjavCrawler("crawl", false);
 
     crawler.getConf().setExecuteInterval(5000);
 
