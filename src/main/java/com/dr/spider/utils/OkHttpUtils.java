@@ -40,7 +40,7 @@ public class OkHttpUtils {
   public String sendGet() {
     String result = "";
     try {
-      Response response = toResponse();
+      Response response = response();
       result = response.body().string();
       // logger.debug("请求结果：{}", result);
     } catch (Exception e) {
@@ -49,7 +49,7 @@ public class OkHttpUtils {
     return result;
   }
 
-  public Response toResponse() {
+  public Response response() {
     Call call = okHttpClient.newCall(reqBuilder.build());
     Response response = null;
     try {

@@ -35,11 +35,10 @@ public class HegreCrawler extends BreadthCrawler {
 
       crawlDatums.add(page.links(".item>a")).type("content");
     } else if (page.matchType("content")) {
-
       String download= page.select(".resolution.content.top-resolution>a").first().attr("href");
 
-      System.out.println(download);
 
+      System.out.println(download);
     }
 
   }
