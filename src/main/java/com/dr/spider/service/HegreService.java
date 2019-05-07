@@ -1,8 +1,6 @@
 package com.dr.spider.service;
 
 import com.dr.spider.base.SpiderInfo;
-import com.dr.spider.model.BaseVideo;
-import com.dr.spider.utils.MD5;
 import com.dr.spider.utils.OkHttpUtils;
 import java.util.List;
 import org.jsoup.Jsoup;

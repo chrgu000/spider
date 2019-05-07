@@ -37,6 +37,10 @@ public class DemoManualNewsCrawler extends BreadthCrawler {
       crawlDatums.add(page.links(".video>a")).type("content");
     } else if (page.matchType("content")) {
 
+
+
+
+
       System.out.println(url);
     }
   }
