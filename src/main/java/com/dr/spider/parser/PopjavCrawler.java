@@ -3,8 +3,15 @@ package com.dr.spider.parser;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
 import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.plugin.rocks.BreadthCrawler;
+import com.dr.spider.constant.CrawlConst;
+import com.dr.spider.service.PopjavService;
+import com.dr.spider.utils.OkHttpUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 public class PopjavCrawler extends BreadthCrawler {
+
+
 
   public PopjavCrawler(String crawlPath, boolean autoParse) {
     super(crawlPath, autoParse);
@@ -36,21 +43,19 @@ public class PopjavCrawler extends BreadthCrawler {
     } else if (page.matchType("content")) {
 
       String vid = page.select("#b_vidoza").first().attr("date");
+      String play= PopjavService.videoUrlDecode(vid);
+      System.out.println(play);
+      //String downloadUrl= Jsoup.parse(new OkHttpUtils(play).sendGet()).select("#player source").first().attr("src");
+      //System.out.println(downloadUrl);
 
-
-
-      System.out.println(url);
     }
   }
 
   public static void main(String[] args) throws Exception {
-    PopjavCrawler crawler = new PopjavCrawler("crawl", false);
-
+    PopjavCrawler crawler = new PopjavCrawler(CrawlConst.CRAWL_PATH, false);
     crawler.getConf().setExecuteInterval(5000);
-
     crawler.getConf().set("title_prefix", "PREFIX_");
     crawler.getConf().set("content_length_limit", 20);
-
     /*start crawl with depth of 4*/
     crawler.start(4);
   }

@@ -11,33 +11,29 @@ public class VideoInfo {
   // 主键
   private String id;
 
-  @Field("status")
-  // 状态 0:没有
-  private Integer status;
+  @Field("sn")
+  // 唯一标识
+  private String sn;
 
   @Field("webCode")
   // 网站唯一标识
   private Integer webCode;
 
+  @Field("webUrl")
+  private String webUrl;
+
+  @Field("playUrl")
+  private String playUrl;
+
   @Field("title")
   // 标题
   private String title;
 
-  @Field("actors")
-  // 演员
-  private String actors;
 
-  @Field("publisherDate")
-  // 出版时间
-  private Date publisherDate;
+  @Field("status")
+  // 状态 0:没有
+  private Integer status;
 
-  @Field("tags")
-  // 标签
-  private String tags;
-
-  @Field("state")
-  // 国家
-  private String state;
 
   public Integer getStatus() {
     return status;
@@ -71,35 +67,28 @@ public class VideoInfo {
     this.title = title;
   }
 
-  public String getActors() {
-    return actors;
+
+  public String getSn() {
+    return sn;
   }
 
-  public void setActors(String actors) {
-    this.actors = actors;
+  public void setSn(String sn) {
+    this.sn = sn;
   }
 
-  public Date getPublisherDate() {
-    return publisherDate;
+  public String getWebUrl() {
+    return webUrl;
   }
 
-  public void setPublisherDate(Date publisherDate) {
-    this.publisherDate = publisherDate;
+  public void setWebUrl(String webUrl) {
+    this.webUrl = webUrl;
   }
 
-  public String getTags() {
-    return tags;
+  public String getPlayUrl() {
+    return playUrl;
   }
 
-  public void setTags(String tags) {
-    this.tags = tags;
-  }
-
-  public String getState() {
-    return state;
-  }
-
-  public void setState(String state) {
-    this.state = state;
+  public void setPlayUrl(String playUrl) {
+    this.playUrl = playUrl;
   }
 }
