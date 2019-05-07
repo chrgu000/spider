@@ -19,7 +19,9 @@
         <jsoup.version>1.8.3</jsoup.version>
         <fastjson.version>1.2.56</fastjson.version>
         <okhttp.version>3.14.0</okhttp.version>
-        <httpclinet>4.5.8</httpclinet>
+        <httpclinet.version>4.5.8</httpclinet.version>
+        <commons-lang3.version>3.9</commons-lang3.version>
+        <commons-io.version>2.6</commons-io.version>
 
     </properties>
 
@@ -43,39 +45,39 @@
         </dependency>
 
 
-        <dependency>
-            <groupId>org.jsoup</groupId>
-            <artifactId>jsoup</artifactId>
-            <version>${jsoup.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.jsoup</groupId>-->
+<!--            <artifactId>jsoup</artifactId>-->
+<!--            <version>${jsoup.version}</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>${fastjson.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-            <version>${okhttp.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.squareup.okhttp3</groupId>-->
+<!--            <artifactId>okhttp</artifactId>-->
+<!--            <version>${okhttp.version}</version>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>${httpclinet}</version>
+            <version>${httpclinet.version}</version>
         </dependency>
 
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.6</version>
+            <version>${commons-io.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.9</version>
+            <version>${commons-lang3.version}</version>
         </dependency>
 
         <dependency>
