@@ -27,7 +27,7 @@ public class HegreService {
     VideoInfo video = new VideoInfo();
     try {
       String html = new OkHttpUtils(spiderInfo.getUrl()).addCookie(spiderInfo.getWebCookie())
-          .sendGet();
+          .send();
       Document doc = Jsoup.parse(html);
       Elements eles = doc.select(".item");
       String videoDetailUrl, sn, title, coverImg;

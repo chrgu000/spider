@@ -30,7 +30,7 @@ public class PopjavService {
     public Object crawler(String url, int webcode) {
         VideoInfo video;
         try {
-            String html = new OkHttpUtils(url).sendGet();
+            String html = new OkHttpUtils(url).send();
             Document doc = Jsoup.parse(html);
             Elements eles = doc.select(".video_list li");
             String videoDetailUrl, sn, title, coverImg;

@@ -3,8 +3,10 @@ package com.dr.spider.utils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.RandomAccessFile;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.channels.FileChannel;
@@ -15,6 +17,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import okhttp3.Response;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,24 +27,40 @@ public class FileIOUtils {
 
   public final static Logger logger = LoggerFactory.getLogger(FileIOUtils.class);
 
+  /**
+   * 下载视频
+   *
+   * @param urlString 视频下载地址
+   * @param endFormat 视频格式 例如 .mp4
+   * @param globalPath 根路径
+   */
+  public static String downloadVideo(String urlString, String sn, String endFormat,
+      String globalPath) {
+    return downloadVideo(urlString, sn, endFormat, globalPath, null);
+  }
 
   /**
    * 下载视频
    *
    * @param urlString 视频下载地址
-   * @param fileUrl sn
    * @param endFormat 视频格式 例如 .mp4
    * @param globalPath 根路径
    */
-  public static String downloadVideo(String urlString, String fileUrl, String endFormat,
-      String globalPath) {
+  public static String downloadVideo(String urlString, String sn, String endFormat,
+      String globalPath, String cookie) {
     if (urlString == null || "".equals(urlString)) {
       return "";
     }
-    int hash = HashUtils.getHashFilePath(fileUrl);
-    File fileT = new File(globalPath + File.separator + hash + File.separator + fileUrl);
+    int hash = HashUtils.getHashFilePath(sn);
+    File fileT = new File(globalPath + File.separator + hash + File.separator + sn);
+    RandomAccessFile raf = null;
     OutputStream os = null;
     InputStream is = null;
+    // 输出的文件流
+    String fileName = sn + endFormat;
+    String filePath = hash + File.separator + sn + File.separator + fileName;
+    String realPath = globalPath + File.separator + filePath;
+    File file = new File(realPath);
     if (!fileT.exists()) {
       fileT.mkdirs();
     }
@@ -51,6 +71,14 @@ public class FileIOUtils {
       HttpURLConnection con = (HttpURLConnection) url.openConnection();
       con.setRequestProperty("User-Agent",
           "Mozilla/5.0 (iPhone; CPU iPhone OS 11_1 like Mac OS X) AppleWebKit/604.3.5 (KHTML, like Gecko) Mobile/15B93");
+      if (StringUtils.isNotEmpty(cookie)) {
+        con.setRequestProperty("Cookie", cookie);
+      }
+      if (file.exists()) {
+        con.setRequestProperty("Range", "bytes=" + file.length() + "-");
+      } else {
+        file.createNewFile();// 创建文件
+      }
       con.setConnectTimeout(60000);
       con.setReadTimeout(60000);
       con.connect();
@@ -60,16 +88,13 @@ public class FileIOUtils {
       byte[] bs = new byte[1024];
       // 读取到的数据长度
       int len;
-      // 输出的文件流
-      String fileName = fileUrl + endFormat;
-      String filePath = hash + File.separator + fileUrl + File.separator + fileName;
-      String realPath = globalPath + File.separator + filePath;
-      File file = new File(realPath);
-      file.createNewFile();// 创建文件
-      os = new FileOutputStream(file);
+      raf = new RandomAccessFile(file, "rwd");
+      raf.seek(file.length());
+      // os = new FileOutputStream(file);
       // 开始读取
       while ((len = is.read(bs)) != -1) {
-        os.write(bs, 0, len);
+        // os.write(bs, 0, len);
+        raf.write(bs, 0, len);
       }
       String videoPath = File.separator + filePath;
       int fileLength = con.getContentLength();
@@ -85,8 +110,8 @@ public class FileIOUtils {
         if (is != null) {
           is.close();
         }
-        if (os != null) {
-          os.close();
+        if (raf != null) {
+          raf.close();
         }
       } catch (Exception e) {
         e.printStackTrace();
@@ -338,6 +363,24 @@ public class FileIOUtils {
       result += m.group();
     }
     return result;
+  }
+
+
+  /**
+   * 删除文件夹
+   *
+   * @param folderPath 文件夹完整绝对路径
+   * @return true OR false
+   */
+  public static boolean deleteFolder(String folderPath) {
+    try {
+      FileUtils.deleteDirectory(new File(folderPath));
+      return true;
+    } catch (IOException e) {
+      e.printStackTrace();
+      logger.error("调用ApacheCommon删除指定目录时：" + e.toString());
+      return false;
+    }
   }
 
 }
