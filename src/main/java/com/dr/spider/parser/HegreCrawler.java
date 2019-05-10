@@ -7,6 +7,11 @@ import com.dr.spider.constant.CrawlConst;
 import com.dr.spider.constant.GlobalConst;
 import com.dr.spider.utils.FileIOUtils;
 import com.dr.spider.utils.MD5;
+import com.dr.spider.utils.helper.MongodbHelper;
+import com.mongodb.BasicDBObject;
+import com.mongodb.client.MongoCollection;
+import org.apache.commons.lang3.StringUtils;
+import org.bson.Document;
 
 public class HegreCrawler extends BreadthCrawler {
 
@@ -27,25 +32,31 @@ public class HegreCrawler extends BreadthCrawler {
 
   @Override
   public void visit(Page page, CrawlDatums crawlDatums) {
-    if (page.code() == 301 || page.code() == 302) {
-      crawlDatums.addAndReturn(page.location()).meta(page.meta());
-      return;
-    }
-    String url = page.url();
-    if (page.matchType("list")) {
-
-      crawlDatums.add(page.links(".item>a")).type("content");
-    } else if (page.matchType("content")) {
-      String download = page.select(".resolution.content.top-resolution>a").first().attr("href");
-      if ("http://cdn.content.hegre.com/films/ariel-photo-fantasy/ariel-photo-fantasy-2160p.mp4?download=true&v=1508193281"
-          .equals(download)) {
-        String videoPath = FileIOUtils
-            .downloadVideo(download, MD5.encode(download), ".mp4", GlobalConst.GLOBAL_PATH, cookie);
-        System.out.println(videoPath);
+    try {
+      if (page.code() == 301 || page.code() == 302) {
+        crawlDatums.addAndReturn(page.location()).meta(page.meta());
+        return;
       }
-      System.out.println(download);
-    }
+      if (page.matchType("list")) {
+        crawlDatums.add(page.links(".item>a")).type("content");
+      } else if (page.matchType("content")) {
+        String download = page.select(".resolution.content.top-resolution>a").first().attr("href");
+        String sn = MD5.encode(download);
+        Document viDoc = MongodbHelper
+            .findOne(new BasicDBObject("sn", sn), GlobalConst.COLLECTION_NAME_VIDEOINFO);
+        if (viDoc==null) {
+          String videoPath = FileIOUtils
+              .downloadVideo(download, MD5.encode(download), ".mp4", GlobalConst.GLOBAL_PATH,
+                  cookie);
+          if (StringUtils.isNotEmpty(videoPath)) {
 
+
+          }
+        }
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   public static void main(String[] args) throws Exception {
