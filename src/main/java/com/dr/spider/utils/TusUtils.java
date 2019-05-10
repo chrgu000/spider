@@ -1,6 +1,7 @@
 package com.dr.spider.utils;
 
 import io.tus.java.client.*;
+import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,5 +58,14 @@ public class TusUtils {
             e.printStackTrace();
         }
         return result[0];
+    }
+
+    public static void main(String[] args) throws Exception {
+        String url = "http://upload291.fvs.io/upload/";
+        File file = new File("/Users/longlongl/work/tt_bak/Downloads/ts/test2.mp4");
+        Map<String, String> metadata = new HashMap<>();
+        metadata.put("token", "dytWbllXYUhJS1ZyMVdpZTFwQVhnUzRxdDVOU1l3bkZZS0F3cVhZOE1zdVJrM1E3NXFEK04xM1p1SU11d3habWh4a1J5LzV2UFdGY2w2Qk9zdz09Om9PMUs0TWpqeHJlb3FFa2VwZ2VKYnc9PQ");
+        metadata.put("name", file.getName());
+        TusUtils.update(url, file, metadata);
     }
 }

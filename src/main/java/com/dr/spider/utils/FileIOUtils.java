@@ -96,11 +96,10 @@ public class FileIOUtils {
         // os.write(bs, 0, len);
         raf.write(bs, 0, len);
       }
-      String videoPath = File.separator + filePath;
       int fileLength = con.getContentLength();
       logger.warn("下载文件大小------------》》》 流大小 {} 下载文件大小 {}", fileLength, file.length());
       if (file.exists() && fileLength == file.length()) {
-        return videoPath;
+        return realPath;
       }
     } catch (Exception e) {
       e.printStackTrace();

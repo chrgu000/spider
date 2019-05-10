@@ -40,8 +40,14 @@ public class MongodbHelper {
    */
   public static Document findOne(BasicDBObject query, String collName) {
     MongoCollection<Document> coll = getCollection(collName);
-    FindIterable<Document> findIterable = coll.find(query).limit(1);
-    Document result = findIterable.iterator().next();
+
+    // FindIterable<Document> findIterable = coll.find(query).limit(1);
+    FindIterable<Document> findIterable = coll.find(query);
+    MongoCursor<Document> mongoCursor = findIterable.iterator();
+    Document result=null;
+    if(mongoCursor.hasNext()){
+      result=mongoCursor.next();
+    }
     return result;
   }
 
@@ -103,7 +109,7 @@ public class MongodbHelper {
    * @param doc Bson文档
    * @param collName 集合名称
    */
-  public void insert(Document doc, String collName){
+  public static void insert(Document doc, String collName){
     MongoCollection<Document> coll = getCollection(collName);
     coll.insertOne(doc);
   }

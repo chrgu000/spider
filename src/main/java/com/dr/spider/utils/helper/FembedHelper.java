@@ -3,6 +3,10 @@ package com.dr.spider.utils.helper;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dr.spider.utils.OkHttpUtils;
+import com.dr.spider.utils.TusUtils;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 import okhttp3.FormBody;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -41,25 +45,16 @@ public class FembedHelper {
       res.setToken(obj.getJSONObject("data").getString("token"));
     }
     return res;
-
   }
 
-
-  public static void main(String[] args) {
-    FembedResponse res = upload("1000");
-    if (res.isSuccess()) {
-      System.out.println(res.getUrl());
-      System.out.println(res.getToken());
-
-
-    }
+  public static String fembedVideoUpload(String filePath) {
+    FembedResponse res = upload();
+    File file = new File(filePath);
+    Map<String, String> metadata = new HashMap<>();
+    metadata.put("token", res.getToken());
+    metadata.put("name", file.getName());
+    return TusUtils.update(res.getUrl(), file, metadata);
   }
 
-//  curl -
-//  X POST
-//  https://www.fembed.com/api/upload
-//      -d "client_id=ClIENT_ID&client_secret=ClIENT_SECRET"
-//      -d "folder_id=FOLDER_ID"
-//      -H "Content-Type: application/x-www-form-urlencoded"
 
 }

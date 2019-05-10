@@ -3,16 +3,17 @@ package com.dr.spider.parser;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
 import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.plugin.rocks.BreadthCrawler;
+import com.alibaba.fastjson.JSON;
 import com.dr.spider.constant.CrawlConst;
 import com.dr.spider.constant.GlobalConst;
 import com.dr.spider.model.VideoInfo;
 import com.dr.spider.utils.FileIOUtils;
 import com.dr.spider.utils.MD5;
 import com.dr.spider.utils.OkHttpUtils;
+import com.dr.spider.utils.helper.FembedHelper;
 import com.dr.spider.utils.helper.MongodbHelper;
 import com.dr.spider.utils.helper.ProxyVoHelper;
 import com.mongodb.BasicDBObject;
-import com.mongodb.client.MongoCollection;
 import org.apache.commons.lang3.StringUtils;
 import org.bson.Document;
 
@@ -46,16 +47,19 @@ public class HegreCrawler extends BreadthCrawler {
         String download = page.select(".resolution.content.top-resolution>a").first().attr("href");
         String sn = MD5.encode(download);
         Document viDoc = MongodbHelper
-            .findOne(new BasicDBObject("sn", sn), GlobalConst.COLLECTION_NAME_VIDEOINFO);
-        if (viDoc==null) {
+            .findOne(new BasicDBObject("sn", new BasicDBObject("$eq", sn)),
+                GlobalConst.COLLECTION_NAME_VIDEOINFO);
+        if (viDoc == null) {
           String videoPath = FileIOUtils
               .downloadVideo(download, MD5.encode(download), ".mp4", GlobalConst.GLOBAL_PATH,
                   cookie);
           if (StringUtils.isNotEmpty(videoPath)) {
-            VideoInfo v=new VideoInfo();
+            VideoInfo v = new VideoInfo();
             v.setSn(sn);
-
-
+            Document vDoc = Document.parse(JSON.toJSONString(v));
+            MongodbHelper.insert(vDoc, GlobalConst.COLLECTION_NAME_VIDEOINFO);
+            String result = FembedHelper.fembedVideoUpload(videoPath);
+            System.out.println("上传结果: " + result);
           }
         }
       }
@@ -64,12 +68,8 @@ public class HegreCrawler extends BreadthCrawler {
     }
   }
 
-  public static void main(String[] args) {
-    String http=new OkHttpUtils("https://www.hegre.com").proxy(ProxyVoHelper.getProxyip()).send();
-    System.out.println(http);
-  }
 
-  public static void main1(String[] args) throws Exception {
+  public static void main(String[] args) throws Exception {
     HegreCrawler crawler = new HegreCrawler(CrawlConst.CRAWL_PATH, false);
     crawler.getConf().setExecuteInterval(5000);
     crawler.getConf().set("title_prefix", "PREFIX_");
