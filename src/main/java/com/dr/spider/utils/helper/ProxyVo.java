@@ -1,4 +1,4 @@
-package com.dr.spider.utils;
+package com.dr.spider.utils.helper;
 
 public class ProxyVo {
 

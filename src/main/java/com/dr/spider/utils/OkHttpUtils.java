@@ -1,12 +1,12 @@
 package com.dr.spider.utils;
 
+import com.dr.spider.utils.helper.ProxyVo;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Proxy.Type;
 import okhttp3.Authenticator;
 import okhttp3.Call;
 import okhttp3.Credentials;
-import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -67,7 +67,7 @@ public class OkHttpUtils {
                 .build();
           }
         };
-        clientBuilder.authenticator(proxyAuthenticator);
+        clientBuilder.proxyAuthenticator(proxyAuthenticator);
       }
     }
     return this;
