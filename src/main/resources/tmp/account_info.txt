@@ -1,0 +1,240 @@
+#youtube账号
+用户名:BetancesFtValerieo6684@gmail.com
+密码:Shich7Augoo
+key:
+
+#youtube账号
+用户名:nathan123888nathan
+密码:123456nathan
+key:AIzaSyCzDDdWAB0Ws7AAfH9ArlPPI6HTxtSpJBU
+
+#icloud账号
+密码:Ll19860214
+
+#vpn账号
+103.51.13.167（vpn类型l2tp）
+共享密钥：vpn@13167
+用户名：nathan
+密码：vS@GvIfr
+
+#坚果账号
+账号：87246310
+密码：x4idixff
+
+#虾米账号
+账号：13332670191
+密码：qqwwee123.
+
+连上vpn访问内网修改路由表设置
+重启一下吧，然后运行这几个就可以了
+sudo   route -n add 192.168.101.0/24 10.10.30.1
+sudo   route -n add 192.168.1.0/24 10.10.30.1
+sudo   route -n add 192.168.0.0/24 10.10.30.1
+sudo   route -n add 172.16.10.0/24 10.10.30.1
+
+
+#av 爬虫
+http://www.heyzo.com/index2.html
+D2Pass ID: mmmxxx240d@gmail.com
+Password: gucci1006
+
+https://www.hegre.com
+账号：WS8LzaV6Nv
+密码：U3iD8RLJk9U
+邮箱：tRwUfj66@01611.net
+
+邮件接受：http://fuckrandom.com/email/01611.net/tRwUfj66?token=$2a$10$Zd8lCZii0XgQzTSSTI3rZeNmzc/puEQJ/j0nl86fQrmbOzsItuBeG
+
+https://lubed.com/
+账号：vQ4Y3DKfWi8X
+密码：36FcGFq7tYjL
+邮箱：cePUpYe05@01611.net
+邮件接受：http://fuckrandom.com/email/01611.net/cePUpYe05?token=$2a$10$z.aZzesZ9/BF2S6qSsGgy.xWfEvokVynsje.vAFqZZ614exv1bWDm
+
+https://www.blacked.com/
+账号：kinnwf95@05033.net
+密码：LQ3h6dg8CnAA
+邮件接受：http://fuckrandom.com/email/05033.net/kInNwf95?token=$2a$10$0upnsud42VB6Lrx0ium8cezGhReiBnMd6dhNg.Nar2usMJKaE3sVK
+
+http://www.s-cute.com/
+账号：FmKyoxK142@50032.net
+密码：4GM78hLHVjnd
+邮件接受：http://fuckrandom.com/email/50032.net/FmKyoxK142?token=$2a$10$CXTmTF7nHyzqYmGjMM4qvuKLJQCsEF1NWnhivEGRmUpgqSOtCE69O
+
+
+https://land.brazzersnetwork.com
+邮箱：jdrYx340@01611.net
+用户名：jdrYx340
+密码：W478swEbhABv
+邮件接受：http://fuckrandom.com/email/01611.net/jdrYx340?token=$2a$10$4h7.TMEFSIoOIz3yxl6zEuf0k9fTXmC0fpOvjP7WA/PJalc9Rrj2W
+
+
+https://members.teamskeet.com
+账号：over111111
+密码：LZbzYmjx8kXay44
+邮箱：zwEIPboTV16596@05822.net
+邮件接受：http://fuckrandom.com/email/05822.net/zwEIPboTV16596?token=$2a$10$eMiqc18Nb0AbU50BoNMU8..ll53cLl0UE8YrZnal10wx8ZfnUB3PO
+
+
+http://www.h4610.com/list.html?site_id=4001&page=1
+账号：nzSkFa607@05077.net
+密码：4rmGm4rCwmHz3
+邮件接受：http://fuckrandom.com/email/05077.net/nzSkFa607?token=$2a$10$cJ/qTp.uuJb0azZWX7ROquX2yldZBf.YdTkQw2GzgmwpM0w/yAU3.
+
+
+https://www.babes.com/
+用户名：du24837@163.com
+密码：qqwwee123.
+邮箱：du24837@163.com
+邮箱密码：aa7788
+
+
+https://porn.airav.cc/
+账号：over111111
+密码：qqwwee123.
+邮箱：kuo7683@163.com
+邮箱密码：aa7788
+
+
+开发环境服务器：
+cpu转码1：192.168.0.154:22 root/welcome1!
+cpu转码2：192.168.0.165:22 root/welcome
+redis：192.168.101.163 root/welcome
+web服务：192.168.101.169 root/welcome
+
+
+TItan预发布环境：
+103.41.106.209 8061 root Toki=yLjE2lOioC04xlNS4xMwo=
+titan-manager应用目录：/opt/app
+连上外测后，ssh 这个ip ssh 192.168.117.19
+密码：9r1kjls9iXoi=4c0xo
+master、work应用目录：/opt/app
+
+
+
+rabbitmq:
+  对内：
+    IP:192.168.117.10  端口：5672  用户：taitan  密码：3hwdsi042il
+
+    web访问：
+    IP:203.95.192.29  端口：15672  用户：taitan  密码：3hwdsi042il
+
+  对外：
+    IP:192.168.117.10  端口：5673  用户：taitan  密码：3hwdsi042il
+
+    web访问：
+    IP:203.95.192.29  端口：15673  用户：taitan  密码：3hwdsi042il
+
+
+redis:
+  IP：192.168.117.10  端口：7000  密码：yebknz128
+  IP：192.168.117.10  端口：7001  密码：yebknz128
+  IP：192.168.117.10  端口：7002  密码：yebknz128
+  IP：192.168.117.10  端口：7003  密码：yebknz128
+  IP：192.168.117.10  端口：7004  密码：yebknz128
+  IP：192.168.117.10  端口：7005  密码：yebknz128
+
+redis 主从：
+主IP：192.168.117.10  端口：6379  密码：yebknz128
+从IP：192.168.117.10  端口：6378  密码：yebknz128
+
+mysql
+  IP：192.168.117.10  端口：3306  用户：taitan  密码：oiiu10oimxzc
+mysql外网IP
+  IP：203.95.192.29  端口：3306  用户：taitan  密码：oiiu10oimxzc
+
+
+titan-manager：http://manager.9-g.net/login.html
+titan-jobadmin：http://jobadmin.9-g.net/toLogin
+
+
+http://dl197.80s.im:920/1810/2012世界末日/2012世界末日.mp4
+http://dl196.80s.im:920/1810/超越边缘/超越边缘.mp4
+
+预发布环境：
+103.41.106.209 8061 root Toki=yLjE2lOioC04xlNS4xMwo=
+titan-manager应用目录：/opt/app
+连上外测后，ssh 这个ip ssh 192.168.117.19
+密码：9r1kjls9iXoi=4c0xo
+
+master、work应用目录：/opt/app
+
+
+
+
+蝉道：
+192.168.101.167
+redmine:
+192.168.101.167
+Yapi 模拟接口测试:
+http://192.168.0.103
+nexus：http://192.168.101.168
+git clone —bare http://域名/分组/仓库名称.git
+
+cd 仓库名称.git
+
+
+外侧mysql    IP：203.95.192.29  端口：3306  用户：taitan  密码：oiiu10oimxzc
+
+服务器：192.168.0.63
+root
+welcome
+
+
+git push —mirror http://新域名/新分组/新仓库名称.git
+
+
+192.168.0.142  git
+192.168.0.60   mysql
+192.168.0.166 ceph
+
+
+processon
+https://www.processon.com/mindmap/5cada286e4b0b327b8e00882
+https://www.processon.com/diagraming/5ca97d0ce4b071e8c546ff73
+qxonjbmjj82@05033.net/qqwwee123.
+
+
+蝉道：192.168.0.67 root/welcome
+Confluence： 192.168.0.94 root/welcome
+
+
+gitlab http://192.168.0.142/
+账号：nathan
+密码：nathan201788
+邮箱：longlong198602@icloud.com
+
+
+235999
+dcf2572f5ac674f8b2d9e9454342cc451002
+
+生产环境
+git clone --depth=1 http://103.51.15.118:10081/pika/Titan-crawler-worker
+
+http://manager.lovenbyun.com/login.html
+ce aaiYYIhAlYlw
+
+http://103.51.15.118:18080/jobinfo?jobGroup=5
+admin/sdlkj0l=hXoi9O1xc
+
+mq地址：
+http://103.51.15.118:6672/
+pika icx0jLon1zi2c1
+
+
+vpn选择cisco模式
+共享密钥：welcome@123.com
+用户：UserNathan 密码：myUserPassNathan
+服务器地址：202.46.37.176
+
+配置好，连上vpn，mac命令行执行
+sudo route -n add -net 192.168.0.0 -netmask 255.255.255.0 192.168.3.1
+
+CEPH
+1.内网s3 web：http://192.168.117.179:8060/v1
+2.外网s3的web地址：http://103.51.15.118:28056/login?redirect=dashboard
+3.资源外网：103.51.15.118
+4.资源内网：in-outtest-titan
+
+外侧数据库：
+103.51.15.118:4408 taitan oiiu10oimxzc

@@ -29,11 +29,13 @@ public class VideoInfo {
   // 标题
   private String title;
 
-
   @Field("status")
   // 状态 0:没有
   private Integer status;
 
+  @Field("insertDate")
+  // 插入时间
+  private Date insertDate;
 
   public Integer getStatus() {
     return status;
@@ -90,5 +92,13 @@ public class VideoInfo {
 
   public void setPlayUrl(String playUrl) {
     this.playUrl = playUrl;
+  }
+
+  public Date getInsertDate() {
+    return insertDate;
+  }
+
+  public void setInsertDate(Date insertDate) {
+    this.insertDate = insertDate;
   }
 }
