@@ -406,4 +406,20 @@ public class FileIOUtils {
     }
   }
 
+  /**
+   * 删除文件
+   * @param filePath
+   * @return
+   */
+  public static boolean deleteFile(String filePath){
+    try {
+      FileUtils.forceDelete(new File(filePath));
+      return true;
+    } catch (IOException e) {
+      e.printStackTrace();
+      logger.error("调用ApacheCommon删除指定文件时：" + e.toString());
+      return false;
+    }
+  }
+
 }

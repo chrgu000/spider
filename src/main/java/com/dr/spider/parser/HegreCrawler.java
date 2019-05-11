@@ -75,6 +75,7 @@ public class HegreCrawler extends BreadthCrawler {
             Document vDoc = Document.parse(JSON.toJSONStringWithDateFormat(v, "yyyy-MM-dd HH:mm:ss"));
             MongodbHelper.insert(vDoc, GlobalConst.COLLECTION_NAME_VIDEOINFO);
 
+            // TODO 上传成功并且写入DB 可以删除文件
           }
         }
       }
