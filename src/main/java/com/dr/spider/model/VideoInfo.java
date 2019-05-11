@@ -25,6 +25,9 @@ public class VideoInfo {
   @Field("playUrl")
   private String playUrl;
 
+  @Field("videoId")
+  private String videoId;
+
   @Field("title")
   // 标题
   private String title;
@@ -100,5 +103,13 @@ public class VideoInfo {
 
   public void setInsertDate(Date insertDate) {
     this.insertDate = insertDate;
+  }
+
+  public String getVideoId() {
+    return videoId;
+  }
+
+  public void setVideoId(String videoId) {
+    this.videoId = videoId;
   }
 }

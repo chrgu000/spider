@@ -2,6 +2,7 @@ package com.dr.spider.utils.helper;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.dr.spider.utils.FileIOUtils;
 import com.dr.spider.utils.OkHttpUtils;
 import com.dr.spider.utils.TusUtils;
 import java.io.File;
@@ -19,7 +20,6 @@ public class FembedHelper {
 
   public final static String API_ID = "235999";
   public final static String API_SECRET = "dcf2572f5ac674f8b2d9e9454342cc451002";
-
 
   public static FembedResponse upload() {
     return upload(null);
@@ -47,14 +47,60 @@ public class FembedHelper {
     return res;
   }
 
-  public static String fembedVideoUpload(String filePath) {
-    FembedResponse res = upload();
-    File file = new File(filePath);
-    Map<String, String> metadata = new HashMap<>();
-    metadata.put("token", res.getToken());
-    metadata.put("name", file.getName());
-    return TusUtils.update(res.getUrl(), file, metadata);
+  public static FembedResponse fingerprint(FembedResponse res) {
+    FormBody body = new FormBody.Builder().add("client_id", API_ID).add("client_secret", API_SECRET)
+        .add("file_fingerprint", res.getFingerprint()).build();
+    String context = new OkHttpUtils("https://www.fembed.com/api/fingerprint").post(body).send();
+    JSONObject obj = JSON.parseObject(context);
+    res.setSuccess(obj.getBoolean("success"));
+    if (obj.getBoolean("success")) {
+      res.setVideoId(obj.getString("data"));
+    } else {
+      logger.error("获取视频ID失败：{}", res.getVideoUrl());
+    }
+    return res;
   }
 
+  /**
+   * 上传视频封面
+   * @param res
+   * @param imgPath
+   * @return
+   */
+  public static String poster(FembedResponse res, String imgPath) {
+    JSONObject poster = new JSONObject();
+    poster.put("type", "png");
+    poster.put("content", FileIOUtils.fileToBase64(imgPath));
+    String file_id = res.getVideoId();
+    FormBody body = new FormBody.Builder().add("client_id", API_ID).add("client_secret", API_SECRET)
+        .add("file_id", res.getVideoId()).add("poster", poster.toString()).build();
+    String context = new OkHttpUtils("https://www.fembed.com/api/poster").post(body).send();
+    return context;
 
+  }
+
+  public static FembedResponse fembedVideoUpload(String filePath) {
+    FembedResponse res = null;
+    try {
+      res = upload();
+      File file = new File(filePath);
+      Map<String, String> metadata = new HashMap<>();
+      metadata.put("token", res.getToken());
+      metadata.put("name", file.getName());
+      String videoUrl = TusUtils.update(res.getUrl(), file, metadata);
+      res.setVideoUrl(videoUrl);
+      res.setFingerprint(videoUrl.substring(videoUrl.lastIndexOf("/") + 1, videoUrl.length()));
+      res = fingerprint(res);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return res;
+  }
+
+  public static void main(String[] args) {
+    FembedResponse res = new FembedResponse();
+    res.setFingerprint("887d9100d5e1df34faa6c225ae595574");
+    res = fingerprint(res);
+    System.out.println(res.getVideoId());
+  }
 }

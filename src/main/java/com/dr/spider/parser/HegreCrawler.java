@@ -12,6 +12,7 @@ import com.dr.spider.utils.FileIOUtils;
 import com.dr.spider.utils.MD5;
 import com.dr.spider.utils.OkHttpUtils;
 import com.dr.spider.utils.helper.FembedHelper;
+import com.dr.spider.utils.helper.FembedResponse;
 import com.dr.spider.utils.helper.MongodbHelper;
 import com.mongodb.BasicDBObject;
 import java.util.Date;
@@ -59,8 +60,8 @@ public class HegreCrawler extends BreadthCrawler {
           if (StringUtils.isNotEmpty(videoPath)) {
             String title = page.select(".record-toolbar.clearfix>h1").html();
             String publisherDate = page.select(".date").html();
-            String result = FembedHelper.fembedVideoUpload(videoPath);
-            System.out.println("上传结果: " + result);
+            FembedResponse res = FembedHelper.fembedVideoUpload(videoPath);
+            System.out.println("上传结果: " + JSON.toJSONString(res));
 
             AvVideo v = new AvVideo();
             v.setSn(sn);
@@ -72,9 +73,10 @@ public class HegreCrawler extends BreadthCrawler {
             v.setPublisherDate(
                 JodaTimeUtils.formatToDate(publisherDate, JodaTimeUtils.DATE_FORMAT_MMM_D_YYYY,
                     Locale.ENGLISH));
+            v.setPlayUrl(res.getVideoUrl());
+            v.setVideoId(res.getVideoId());
             Document vDoc = Document.parse(JSON.toJSONStringWithDateFormat(v, "yyyy-MM-dd HH:mm:ss"));
             MongodbHelper.insert(vDoc, GlobalConst.COLLECTION_NAME_VIDEOINFO);
-
             // TODO 上传成功并且写入DB 可以删除文件
           }
         }
@@ -82,6 +84,13 @@ public class HegreCrawler extends BreadthCrawler {
     } catch (Exception e) {
       e.printStackTrace();
     }
+  }
+
+  public static void main(String[] args) {
+    String filePath="/Users/longlongl/work/tt_bak/Downloads/ts/test2.mp4";
+
+    FembedResponse result = FembedHelper.fembedVideoUpload(filePath);
+    System.out.println("上传结果: " + JSON.toJSONString(result));
   }
 
 

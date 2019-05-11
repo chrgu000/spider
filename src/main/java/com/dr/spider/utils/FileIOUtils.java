@@ -11,6 +11,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -40,7 +41,7 @@ public class FileIOUtils {
   }
 
   public static long getLength(String url, String cookie) {
-    long length=0;
+    long length = 0;
     Response res = null;
     try {
       res = new OkHttpUtils(url).addCookie(cookie).response();
@@ -92,12 +93,12 @@ public class FileIOUtils {
       }
       if (file.exists()) {
         long length = getLength(urlString, cookie);
-        if(length==0){
+        if (length == 0) {
           throw new RuntimeException("下载请求返回数据大小为0");
         }
-        if(length==file.length()){
+        if (length == file.length()) {
           return realPath;
-        }else{
+        } else {
           con.setRequestProperty("Range", "bytes=" + file.length() + "-");
         }
       } else {
@@ -408,10 +409,8 @@ public class FileIOUtils {
 
   /**
    * 删除文件
-   * @param filePath
-   * @return
    */
-  public static boolean deleteFile(String filePath){
+  public static boolean deleteFile(String filePath) {
     try {
       FileUtils.forceDelete(new File(filePath));
       return true;
@@ -420,6 +419,37 @@ public class FileIOUtils {
       logger.error("调用ApacheCommon删除指定文件时：" + e.toString());
       return false;
     }
+  }
+
+  /**
+   * 文件转Base64
+   */
+  public static String fileToBase64(String filePath) {
+    String encodedString = "";
+    try {
+      byte[] fileContent = FileUtils.readFileToByteArray(new File(filePath));
+      encodedString = Base64.getEncoder().encodeToString(fileContent);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return encodedString;
+  }
+
+
+  /**
+   * Base64转文件
+   * @param encodedString
+   * @param outputFileName
+   * @return
+   */
+  public static File base64ToFile(String encodedString, String outputFileName) {
+    try {
+      byte[] decodedBytes = Base64.getDecoder().decode(encodedString);
+      FileUtils.writeByteArrayToFile(new File(outputFileName), decodedBytes);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return new File(outputFileName);
   }
 
 }
