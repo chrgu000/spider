@@ -58,18 +58,23 @@ public class HegreCrawler extends BreadthCrawler {
                   cookie);
           if (StringUtils.isNotEmpty(videoPath)) {
             String title = page.select(".record-toolbar.clearfix>h1").html();
-            System.out.println(title);
+            String publisherDate = page.select(".date").html();
+            String result = FembedHelper.fembedVideoUpload(videoPath);
+            System.out.println("上传结果: " + result);
+
             AvVideo v = new AvVideo();
             v.setSn(sn);
             v.setStatus(1);
             v.setWebCode(1000);
             v.setWebUrl(page.url());
             v.setTitle(title);
-
-            Document vDoc = Document.parse(JSON.toJSONString(v));
+            v.setInsertDate(new Date());
+            v.setPublisherDate(
+                JodaTimeUtils.formatToDate(publisherDate, JodaTimeUtils.DATE_FORMAT_MMM_D_YYYY,
+                    Locale.ENGLISH));
+            Document vDoc = Document.parse(JSON.toJSONStringWithDateFormat(v, "yyyy-MM-dd HH:mm:ss"));
             MongodbHelper.insert(vDoc, GlobalConst.COLLECTION_NAME_VIDEOINFO);
-            String result = FembedHelper.fembedVideoUpload(videoPath);
-            System.out.println("上传结果: " + result);
+
           }
         }
       }
@@ -78,47 +83,6 @@ public class HegreCrawler extends BreadthCrawler {
     }
   }
 
-  public static void main(String[] args) {
-
-    try {
-      String url = "https://www.hegre.com/films/valerie-washed-ashore";
-      String html=new OkHttpUtils(url).send();
-      org.jsoup.nodes.Document page = Jsoup.parse(html);
-      String download = page.select(".resolution.content.top-resolution>a").first().attr("href");
-      String sn = MD5.encode(download);
-      Document viDoc = MongodbHelper
-          .findOne(new BasicDBObject("sn", new BasicDBObject("$eq", sn)),
-              GlobalConst.COLLECTION_NAME_VIDEOINFO);
-      if (viDoc == null) {
-        String videoPath = FileIOUtils
-            .downloadVideo(download, MD5.encode(download), ".mp4", GlobalConst.GLOBAL_PATH,
-                cookie);
-        if (StringUtils.isNotEmpty(videoPath)) {
-          String title = page.select(".record-toolbar.clearfix>h1").html();
-          String publisherDate = page.select(".date").html();
-          System.out.println(title);
-
-          String result = FembedHelper.fembedVideoUpload(videoPath);
-          System.out.println("上传结果: " + result);
-
-          AvVideo v = new AvVideo();
-          v.setSn(sn);
-          v.setStatus(1);
-          v.setWebCode(1000);
-          v.setWebUrl(url);
-          v.setTitle(title);
-          v.setInsertDate(new Date());
-          v.setPublisherDate(
-              JodaTimeUtils.formatToDate(publisherDate, JodaTimeUtils.DATE_FORMAT_MMM_D_YYYY,
-                  Locale.ENGLISH));
-          Document vDoc = Document.parse(JSON.toJSONStringWithDateFormat(v, "yyyy-MM-dd HH:mm:ss"));
-          MongodbHelper.insert(vDoc, GlobalConst.COLLECTION_NAME_VIDEOINFO);
-        }
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
 
   public static void main1(String[] args) throws Exception {
     HegreCrawler crawler = new HegreCrawler(CrawlConst.CRAWL_PATH, false);

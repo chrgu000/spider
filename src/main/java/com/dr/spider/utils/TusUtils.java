@@ -37,7 +37,8 @@ public class TusUtils {
                         long totalBytes = upload.getSize();
                         long bytesUploaded = uploader.getOffset();
                         double progress = (double) bytesUploaded / totalBytes * 100;
-                        System.out.printf("Upload at %06.2f%%.\n", progress);
+                        logger.debug("Upload at %06.2f%%.",progress);
+                        // System.out.printf("Upload at %06.2f%%.\n", progress);
                     } while (uploader.uploadChunk() > -1);
                     uploader.finish();
                     result[0] = uploader.getUploadURL().toString();

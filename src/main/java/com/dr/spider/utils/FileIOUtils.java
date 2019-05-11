@@ -39,6 +39,22 @@ public class FileIOUtils {
     return downloadVideo(urlString, sn, endFormat, globalPath, null);
   }
 
+  public static long getLength(String url, String cookie) {
+    long length=0;
+    Response res = null;
+    try {
+      res = new OkHttpUtils(url).addCookie(cookie).response();
+      length = res.body().contentLength();
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      if (res != null) {
+        res.close();
+      }
+    }
+    return length;
+  }
+
   /**
    * 下载视频
    *
@@ -75,7 +91,15 @@ public class FileIOUtils {
         con.setRequestProperty("Cookie", cookie);
       }
       if (file.exists()) {
-        con.setRequestProperty("Range", "bytes=" + file.length() + "-");
+        long length = getLength(urlString, cookie);
+        if(length==0){
+          throw new RuntimeException("下载请求返回数据大小为0");
+        }
+        if(length==file.length()){
+          return realPath;
+        }else{
+          con.setRequestProperty("Range", "bytes=" + file.length() + "-");
+        }
       } else {
         file.createNewFile();// 创建文件
       }
