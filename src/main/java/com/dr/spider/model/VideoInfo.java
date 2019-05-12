@@ -40,6 +40,14 @@ public class VideoInfo {
   // 插入时间
   private Date insertDate;
 
+  //封面原地址
+  @Field("coverImg")
+  private String coverImg;
+
+  //封面本地地址
+  @Field("coverImgLocal")
+  private String coverImgLoacl;
+
   public Integer getStatus() {
     return status;
   }
@@ -111,5 +119,22 @@ public class VideoInfo {
 
   public void setVideoId(String videoId) {
     this.videoId = videoId;
+  }
+
+  public String getCoverImg() {
+    return coverImg;
+  }
+
+  public void setCoverImg(String coverImg) {
+    this.coverImg = coverImg;
+  }
+
+
+  public String getCoverImgLoacl() {
+    return coverImgLoacl;
+  }
+
+  public void setCoverImgLoacl(String coverImgLoacl) {
+    this.coverImgLoacl = coverImgLoacl;
   }
 }

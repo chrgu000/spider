@@ -10,7 +10,6 @@ import com.dr.spider.model.AvVideo;
 import com.dr.spider.utils.JodaTimeUtils;
 import com.dr.spider.utils.FileIOUtils;
 import com.dr.spider.utils.MD5;
-import com.dr.spider.utils.OkHttpUtils;
 import com.dr.spider.utils.helper.FembedHelper;
 import com.dr.spider.utils.helper.FembedResponse;
 import com.dr.spider.utils.helper.MongodbHelper;
@@ -19,7 +18,6 @@ import java.util.Date;
 import java.util.Locale;
 import org.apache.commons.lang3.StringUtils;
 import org.bson.Document;
-import org.jsoup.Jsoup;
 
 public class HegreCrawler extends BreadthCrawler {
 
@@ -60,6 +58,10 @@ public class HegreCrawler extends BreadthCrawler {
           if (StringUtils.isNotEmpty(videoPath)) {
             String title = page.select(".record-toolbar.clearfix>h1").html();
             String publisherDate = page.select(".date").html();
+            String coverImg = page.select(".cover-links a").get(1).attr("href");
+            // 封面图片下载到服务器
+            String coverImgLocal = FileIOUtils.downloadImg(coverImg, sn, GlobalConst.GLOBAL_PATH);
+            // 视频上传
             FembedResponse res = FembedHelper.fembedVideoUpload(videoPath, null);
             System.out.println("上传结果: " + JSON.toJSONString(res));
 
@@ -75,10 +77,13 @@ public class HegreCrawler extends BreadthCrawler {
                     Locale.ENGLISH));
             v.setPlayUrl(res.getVideoUrl());
             v.setVideoId(res.getVideoId());
+            v.setCoverImg(coverImg);
+            v.setCoverImgLoacl(coverImgLocal);
             Document vDoc = Document
                 .parse(JSON.toJSONStringWithDateFormat(v, "yyyy-MM-dd HH:mm:ss"));
             MongodbHelper.insert(vDoc, GlobalConst.COLLECTION_NAME_VIDEOINFO);
             // TODO 上传成功并且写入DB 可以删除文件
+
           }
         }
       }
@@ -88,8 +93,8 @@ public class HegreCrawler extends BreadthCrawler {
   }
 
   public static void main(String[] args) {
-    String filePath = "/Users/longlongl/work/tt_bak/Downloads/ts/test2.mp4";
 
+    String filePath = "/Users/longlongl/work/tt_bak/Downloads/ts/test2.mp4";
     FembedResponse result = FembedHelper.fembedVideoUpload(filePath, null);
     System.out.println("上传结果: " + JSON.toJSONString(result));
   }

@@ -57,7 +57,13 @@ public class FileIOUtils {
     return length;
   }
 
-
+  /**
+   * 图片下载
+   * @param urlString
+   * @param sn
+   * @param globalPath
+   * @return
+   */
   public static String downloadImg(String urlString, String sn, String globalPath) {
     if (urlString == null || "".equals(urlString)) {
       return "";
