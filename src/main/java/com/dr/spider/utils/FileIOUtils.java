@@ -1,11 +1,13 @@
 package com.dr.spider.utils;
 
 import com.dr.spider.constant.GlobalConst;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.net.HttpURLConnection;
@@ -59,10 +61,6 @@ public class FileIOUtils {
 
   /**
    * 图片下载
-   * @param urlString
-   * @param sn
-   * @param globalPath
-   * @return
    */
   public static String downloadImg(String urlString, String sn, String globalPath) {
     if (urlString == null || "".equals(urlString)) {
@@ -190,7 +188,7 @@ public class FileIOUtils {
   }
 
 
-  private static String downloadM3u8(String globalPath, String sn, List<String> tsList) {
+  public static String downloadM3u8(String globalPath, String sn, List<String> tsList) {
     int tsRepetCount = 5;
     // 文件存在，是否重新下载
     boolean fileExistsRepet = true;
@@ -202,13 +200,10 @@ public class FileIOUtils {
         if (!folder.exists()) {
           folder.mkdirs();
         }
-
         tsList.parallelStream().forEach(tsUrl -> {
           FileOutputStream fos = null;
-          // CloseableHttpResponse res = null;
           Response res = null;
           InputStream inputStream = null;
-          HttpEntity entity;
           try {
             if (fileExistsRepet) {
               for (int i = 0; i < tsRepetCount; i++) {
@@ -219,7 +214,6 @@ public class FileIOUtils {
                 } else {
                   fileName = tsUrl.substring(tsUrl.lastIndexOf("/") + 1, tsUrl.length());
                 }
-
                 File f = new File(folderPath + File.separator + fileName);
                 Integer code = null;
                 try {
@@ -227,7 +221,6 @@ public class FileIOUtils {
                   code = res.code();
                   long size = res.body().contentLength();
                   inputStream = res.body().byteStream();
-
                   // 会自动创建文件
                   fos = new FileOutputStream(f);
                   int len;
@@ -305,7 +298,7 @@ public class FileIOUtils {
             String fileMp4Path = filePath.replace(".ts", ".mp4");
             File mp4File = new File(globalPath + File.separator + fileMp4Path);
             if (mp4File.exists()) {
-              return File.separator + fileMp4Path;
+              return globalPath + File.separator + fileMp4Path;
             }
           }
         }
@@ -315,6 +308,19 @@ public class FileIOUtils {
       e.printStackTrace();
     }
     return "";
+  }
+
+  public static List<String> getTsList(String a, String m3u8) throws IOException {
+    InputStream is = new OkHttpUtils(m3u8).addReferer(a).response().body().byteStream();
+    BufferedReader br = new BufferedReader(new InputStreamReader(is));
+    String line;
+    List<String> tsLis = new ArrayList<>();
+    while ((line = br.readLine()) != null) {
+      if (!line.contains("#")) {
+        tsLis.add(line);
+      }
+    }
+    return tsLis;
   }
 
   /**

@@ -15,6 +15,8 @@ public class JodaTimeUtils {
    */
   public static final String DATE_FORMAT_MMM_D_YYYY = "MMM d, yyyy";
 
+  public static final String DATE_FORMAT_YYYYMMDD_01 = "yyyy/MM/dd";
+
   public static String formatToString(String dateFormat) {
     DateTime dateTime = new DateTime();
     return dateTime.toString(dateFormat);

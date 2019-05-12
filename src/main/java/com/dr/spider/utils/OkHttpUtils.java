@@ -78,8 +78,13 @@ public class OkHttpUtils {
     return this;
   }
 
-  public OkHttpUtils addUserAgent(String userAgent){
-    reqBuilder.addHeader("User-Agent",userAgent);
+  public OkHttpUtils addUserAgent(String userAgent) {
+    reqBuilder.addHeader("User-Agent", userAgent);
+    return this;
+  }
+
+  public OkHttpUtils addReferer(String referer) {
+    reqBuilder.addHeader("Referer", referer);
     return this;
   }
 

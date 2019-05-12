@@ -19,7 +19,6 @@ import java.util.Locale;
 import org.apache.commons.lang3.StringUtils;
 import org.bson.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 public class HegreCrawler extends BreadthCrawler {
 
