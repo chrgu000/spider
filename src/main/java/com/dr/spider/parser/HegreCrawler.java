@@ -60,7 +60,7 @@ public class HegreCrawler extends BreadthCrawler {
           if (StringUtils.isNotEmpty(videoPath)) {
             String title = page.select(".record-toolbar.clearfix>h1").html();
             String publisherDate = page.select(".date").html();
-            FembedResponse res = FembedHelper.fembedVideoUpload(videoPath);
+            FembedResponse res = FembedHelper.fembedVideoUpload(videoPath, null);
             System.out.println("上传结果: " + JSON.toJSONString(res));
 
             AvVideo v = new AvVideo();
@@ -75,7 +75,8 @@ public class HegreCrawler extends BreadthCrawler {
                     Locale.ENGLISH));
             v.setPlayUrl(res.getVideoUrl());
             v.setVideoId(res.getVideoId());
-            Document vDoc = Document.parse(JSON.toJSONStringWithDateFormat(v, "yyyy-MM-dd HH:mm:ss"));
+            Document vDoc = Document
+                .parse(JSON.toJSONStringWithDateFormat(v, "yyyy-MM-dd HH:mm:ss"));
             MongodbHelper.insert(vDoc, GlobalConst.COLLECTION_NAME_VIDEOINFO);
             // TODO 上传成功并且写入DB 可以删除文件
           }
@@ -87,9 +88,9 @@ public class HegreCrawler extends BreadthCrawler {
   }
 
   public static void main(String[] args) {
-    String filePath="/Users/longlongl/work/tt_bak/Downloads/ts/test2.mp4";
+    String filePath = "/Users/longlongl/work/tt_bak/Downloads/ts/test2.mp4";
 
-    FembedResponse result = FembedHelper.fembedVideoUpload(filePath);
+    FembedResponse result = FembedHelper.fembedVideoUpload(filePath, null);
     System.out.println("上传结果: " + JSON.toJSONString(result));
   }
 

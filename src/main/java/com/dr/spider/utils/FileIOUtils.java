@@ -56,6 +56,15 @@ public class FileIOUtils {
     return length;
   }
 
+  public static String downloadImg(String urlString,String sn,String globalPath){
+    if (urlString == null || "".equals(urlString)) {
+      return "";
+    }
+    int hash = HashUtils.getHashFilePath(sn);
+
+    return "";
+  }
+
   /**
    * 下载视频
    *
