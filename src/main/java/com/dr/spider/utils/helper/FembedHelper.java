@@ -63,9 +63,6 @@ public class FembedHelper {
 
   /**
    * 上传视频封面
-   * @param res
-   * @param imgPath
-   * @return
    */
   public static String poster(FembedResponse res, String imgPath) {
     JSONObject poster = new JSONObject();
@@ -79,10 +76,14 @@ public class FembedHelper {
 
   }
 
-  public static FembedResponse fembedVideoUpload(String filePath) {
+  public static FembedResponse fembedVideoUpload(String filePath, String folder_id) {
     FembedResponse res = null;
     try {
-      res = upload();
+      if (StringUtils.isNotEmpty(folder_id)) {
+        res = upload(folder_id);
+      } else {
+        res = upload();
+      }
       File file = new File(filePath);
       Map<String, String> metadata = new HashMap<>();
       metadata.put("token", res.getToken());
