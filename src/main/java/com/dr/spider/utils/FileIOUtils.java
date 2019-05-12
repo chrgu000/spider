@@ -1,5 +1,6 @@
 package com.dr.spider.utils;
 
+import com.dr.spider.constant.GlobalConst;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -56,13 +57,42 @@ public class FileIOUtils {
     return length;
   }
 
-  public static String downloadImg(String urlString,String sn,String globalPath){
+
+  public static String downloadImg(String urlString, String sn, String globalPath) {
     if (urlString == null || "".equals(urlString)) {
       return "";
     }
     int hash = HashUtils.getHashFilePath(sn);
-
-    return "";
+    String fileDirectory = globalPath + File.separator + hash + File.separator + sn;
+    String realPath = fileDirectory + File.separator + sn + ".jpg";
+    File fileT = new File(fileDirectory);
+    if (!fileT.exists()) {
+      fileT.mkdirs();
+    }
+    Response response = null;
+    FileOutputStream fos = null;
+    try {
+      response = new OkHttpUtils(urlString).addUserAgent(
+          "Mozilla/5.0 (iPhone; CPU iPhone OS 11_1 like Mac OS X) AppleWebKit/604.3.5 (KHTML, like Gecko) Mobile/15B93")
+          .response();
+      byte[] bs = response.body().bytes();
+      fos = new FileOutputStream(realPath);
+      fos.write(bs);
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      try {
+        if (response != null) {
+          response.close();
+        }
+        if (fos != null) {
+          fos.close();
+        }
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+    return realPath;
   }
 
   /**
@@ -447,9 +477,6 @@ public class FileIOUtils {
 
   /**
    * Base64转文件
-   * @param encodedString
-   * @param outputFileName
-   * @return
    */
   public static File base64ToFile(String encodedString, String outputFileName) {
     try {

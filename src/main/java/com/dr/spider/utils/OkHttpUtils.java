@@ -78,6 +78,11 @@ public class OkHttpUtils {
     return this;
   }
 
+  public OkHttpUtils addUserAgent(String userAgent){
+    reqBuilder.addHeader("User-Agent",userAgent);
+    return this;
+  }
+
   public OkHttpUtils addHeader(String key, String value) {
     reqBuilder.addHeader(key, value);
     return this;
