@@ -34,7 +34,7 @@ public class VideoInfo {
 
   @Field("status")
   // 状态 0:没有
-  private Integer status;
+  private Integer status=1;
 
   @Field("insertDate")
   // 插入时间

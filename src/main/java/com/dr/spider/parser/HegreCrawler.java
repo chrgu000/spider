@@ -18,10 +18,13 @@ import java.util.Date;
 import java.util.Locale;
 import org.apache.commons.lang3.StringUtils;
 import org.bson.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 public class HegreCrawler extends BreadthCrawler {
 
-  public static final String cookie = "_retina=0; _ga=GA1.2.411007182.1556615059; __auc=4beda20a16a6d7cd8ccac919d9e; stay-in-touch=0; _width=2560; locale=en; __asc=49abbdac16aa4db68c3a18f97f7; _gid=GA1.2.1453415963.1557544004; _gat_betaVisitorsTracker=1; _gat_betaNonMembersTracker=1; login=M2QxOTlkYTQwMzUxNDNiNDNjNTg3ODliZWY1ODBiODR8MTU1NzU0NDA0N3wzfDMwNDM3NnwyMDIuNDYuMzcuMTc2fDA=; _www.hegre.com_session=BAh7CDoPc2Vzc2lvbl9pZEkiJWI0YzQ4YTRmOTA5NTk0NDgzY2UyOWQ0OWQwZWM0MzM0BjoGRUY6EF9jc3JmX3Rva2VuSSIxeW5mblQ3R0FGczFHZE5vdUxzU3Q1eXA0Z0UvRWtDNjNYb2xsc0Yya0oyUT0GOwZGSSIKZmxhc2gGOwZUSUM6J0FjdGlvbkNvbnRyb2xsZXI6OkZsYXNoOjpGbGFzaEhhc2h7Bjogc2V0X2NvbGxlY3Rpb25fcG9wdXBfY29va2llVAY6CkB1c2VkewY7CUY%3D--fe2ac89ec34b53132c6bda23bedfebd5037b1616";
+  public static final String COOKIE = "_retina=0; _ga=GA1.2.411007182.1556615059; __auc=4beda20a16a6d7cd8ccac919d9e; locale=en; _www.hegre.com_session=BAh7CDoPc2Vzc2lvbl9pZEkiJWI0YzQ4YTRmOTA5NTk0NDgzY2UyOWQ0OWQwZWM0MzM0BjoGRUY6EF9jc3JmX3Rva2VuSSIxeW5mblQ3R0FGczFHZE5vdUxzU3Q1eXA0Z0UvRWtDNjNYb2xsc0Yya0oyUT0GOwZGSSIKZmxhc2gGOwZUSUM6J0FjdGlvbkNvbnRyb2xsZXI6OkZsYXNoOjpGbGFzaEhhc2h7AAY6CkB1c2VkewA%3D--068506f4ef97c2ac9971bb65b3bf55e67c63ef62; _width=2560; __asc=a47bba1916aac0835baeaadc849; _gid=GA1.2.1863182970.1557664382; _gat_betaVisitorsTracker=1; _gat_betaNonMembersTracker=1; elogin=YTQwNzc4ZWExNjYyOTA3NWQwYzk0NTBlNWU3ZTkyMTV8MTU1NzY2NDQyMXwzfDMwNDM3NnwxMjcuMC4wLjF8MA%3D%3D";
+  public static final int WEBCODE = 1000;
 
   public HegreCrawler(String crawlPath, boolean autoParse) {
     super(crawlPath, autoParse);
@@ -30,8 +33,7 @@ public class HegreCrawler extends BreadthCrawler {
       String seedUrl = String.format("https://www.hegre.com/films?films_page=%d", pageIndex);
       this.addSeed(seedUrl, "list");
     }
-
-    setThreads(2);
+    setThreads(50);
     getConf().setTopN(100);
 
   }
@@ -54,21 +56,29 @@ public class HegreCrawler extends BreadthCrawler {
         if (viDoc == null) {
           String videoPath = FileIOUtils
               .downloadVideo(download, MD5.encode(download), ".mp4", GlobalConst.GLOBAL_PATH,
-                  cookie);
+                  COOKIE);
           if (StringUtils.isNotEmpty(videoPath)) {
             String title = page.select(".record-toolbar.clearfix>h1").html();
             String publisherDate = page.select(".date").html();
+
+            StringBuilder tag = new StringBuilder();
+            for (Element ele : page.select(".approved-tags>a")) {
+              tag.append(ele.html()).append(",");
+            }
+            if (tag.length() > 0) {
+              tag.delete(tag.lastIndexOf(","), tag.length());
+            }
             String coverImg = page.select(".cover-links a").get(1).attr("href");
             // 封面图片下载到服务器
             String coverImgLocal = FileIOUtils.downloadImg(coverImg, sn, GlobalConst.GLOBAL_PATH);
             // 视频上传
-            FembedResponse res = FembedHelper.fembedVideoUpload(videoPath, null);
+            FembedResponse res = FembedHelper.fembedVideoUpload(videoPath, WEBCODE + "");
             System.out.println("上传结果: " + JSON.toJSONString(res));
 
             AvVideo v = new AvVideo();
             v.setSn(sn);
             v.setStatus(1);
-            v.setWebCode(1000);
+            v.setWebCode(WEBCODE);
             v.setWebUrl(page.url());
             v.setTitle(title);
             v.setInsertDate(new Date());
@@ -79,11 +89,13 @@ public class HegreCrawler extends BreadthCrawler {
             v.setVideoId(res.getVideoId());
             v.setCoverImg(coverImg);
             v.setCoverImgLoacl(coverImgLocal);
+            v.setTags(tag.toString());
             Document vDoc = Document
                 .parse(JSON.toJSONStringWithDateFormat(v, "yyyy-MM-dd HH:mm:ss"));
+            // 视频信息入库
             MongodbHelper.insert(vDoc, GlobalConst.COLLECTION_NAME_VIDEOINFO);
-            // TODO 上传成功并且写入DB 可以删除文件
-
+            // 上传后删除文件
+            FileIOUtils.deleteFile(videoPath);
           }
         }
       }
@@ -92,15 +104,8 @@ public class HegreCrawler extends BreadthCrawler {
     }
   }
 
-  public static void main(String[] args) {
 
-    String filePath = "/Users/longlongl/work/tt_bak/Downloads/ts/test2.mp4";
-    FembedResponse result = FembedHelper.fembedVideoUpload(filePath, null);
-    System.out.println("上传结果: " + JSON.toJSONString(result));
-  }
-
-
-  public static void main1(String[] args) throws Exception {
+  public static void main(String[] args) throws Exception {
     HegreCrawler crawler = new HegreCrawler(CrawlConst.CRAWL_PATH, false);
     crawler.getConf().setExecuteInterval(5000);
     crawler.getConf().set("title_prefix", "PREFIX_");
