@@ -76,25 +76,22 @@ public class FembedHelper {
 
   }
 
-  public static FembedResponse fembedVideoUpload(String filePath, String folder_id) {
-    FembedResponse res = null;
-    try {
-      if (StringUtils.isNotEmpty(folder_id)) {
-        res = upload(folder_id);
-      } else {
-        res = upload();
-      }
-      File file = new File(filePath);
-      Map<String, String> metadata = new HashMap<>();
-      metadata.put("token", res.getToken());
-      metadata.put("name", file.getName());
-      String videoUrl = TusUtils.update(res.getUrl(), file, metadata);
-      res.setVideoUrl(videoUrl);
-      res.setFingerprint(videoUrl.substring(videoUrl.lastIndexOf("/") + 1, videoUrl.length()));
-      res = fingerprint(res);
-    } catch (Exception e) {
-      e.printStackTrace();
+  public static FembedResponse fembedVideoUpload(String filePath, String folder_id)
+      throws Exception {
+    FembedResponse res;
+    if (StringUtils.isNotEmpty(folder_id)) {
+      res = upload(folder_id);
+    } else {
+      res = upload();
     }
+    File file = new File(filePath);
+    Map<String, String> metadata = new HashMap<>();
+    metadata.put("token", res.getToken());
+    metadata.put("name", file.getName());
+    String videoUrl = TusUtils.update(res.getUrl(), file, metadata);
+    res.setVideoUrl(videoUrl);
+    res.setFingerprint(videoUrl.substring(videoUrl.lastIndexOf("/") + 1, videoUrl.length()));
+    res = fingerprint(res);
     return res;
   }
 

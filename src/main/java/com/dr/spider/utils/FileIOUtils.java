@@ -187,6 +187,148 @@ public class FileIOUtils {
     return "";
   }
 
+  public static String downloadM3u8(String globalPath, String sn, List<String> tsList,
+      String referer) {
+    int tsRepetCount = 5;
+    // 文件存在，是否重新下载
+    boolean fileExistsRepet = true;
+    try {
+      int hash = HashUtils.getHashFilePath(sn);
+      if (tsList != null && tsList.size() > 0) {
+        String folderPath = globalPath + File.separator + hash + File.separator + sn;
+        File folder = new File(folderPath);
+        if (!folder.exists()) {
+          folder.mkdirs();
+        }
+        // 判断文件是否已经合并好
+        String mp4Path = folderPath + File.separator + sn + ".mp4";
+        if (new File((mp4Path)).exists()) {
+          return mp4Path;
+        }
+        tsList.parallelStream().forEach(tsUrl -> {
+          RandomAccessFile raf = null;
+          FileOutputStream fos = null;
+          Response res = null;
+          InputStream is = null;
+          try {
+            if (fileExistsRepet) {
+              for (int i = 0; i < tsRepetCount; i++) {
+                boolean isSendPotato = false;
+                String fileName;
+                if (tsUrl.contains("?")) {
+                  fileName = tsUrl.substring(tsUrl.lastIndexOf("/") + 1, tsUrl.indexOf("?"));
+                } else {
+                  fileName = tsUrl.substring(tsUrl.lastIndexOf("/") + 1, tsUrl.length());
+                }
+                File f = new File(folderPath + File.separator + fileName);
+                Integer code = null;
+                try {
+                  if (f.exists()) {
+                    long length = new OkHttpUtils(tsUrl).addReferer(referer).response().body()
+                        .contentLength();
+                    if (length == f.length()) {
+                      break;
+                    } else {
+                      res = new OkHttpUtils(tsUrl).addReferer(referer)
+                          .addHeader("Range", "bytes=" + f.length() + "-").response();
+                    }
+                  } else {
+                    res = new OkHttpUtils(tsUrl).addReferer(referer).response();
+                    f.createNewFile();// 创建文件
+                  }
+                  code = res.code();
+                  long size = res.body().contentLength();
+                  is = res.body().byteStream();
+                  // 会自动创建文件
+                  // fos = new FileOutputStream(f);
+                  int len;
+                  raf = new RandomAccessFile(f, "rwd");
+                  raf.seek(f.length());
+                  byte[] buf = new byte[1024];
+                  while ((len = is.read(buf)) != -1) {
+                    // 写入流中
+                    raf.write(buf, 0, len);
+                  }
+                  // fos.flush();
+                  if (size == -1) {
+                    size = f.length();
+                  }
+                  if (f.exists() && size == f.length()) {
+                    break;
+                  }
+                  if (i == tsRepetCount - 1) {
+                    isSendPotato = true;
+                  }
+                } catch (Exception e) {
+                  if (i == tsRepetCount - 1) {
+                    isSendPotato = true;
+                  }
+                  e.printStackTrace();
+                  logger.error("下载失败：e {}", e.getMessage());
+                } finally {// 关流
+                  try {
+                    if (is != null) {
+                      is.close();
+                    }
+                    if (res != null) {
+                      res.close();
+                    }
+                    if (fos != null) {
+                      fos.close();
+                    }
+                    if (isSendPotato) {
+                      StringBuilder sb = new StringBuilder();
+                      sb.append("下载TS文件:" + tsRepetCount + "次全部失败：\n");
+                      sb.append("method:dowload4Resolution \n");
+                      sb.append("url:" + tsUrl + "\n");
+                      sb.append("\ncode:" + code);
+                      sb.append("\nfileUrl:" + f);
+                    }
+                  } catch (Exception e) {
+                    e.printStackTrace();
+                  }
+                }
+              }
+            }
+          } catch (Exception e) {
+            logger.error("m3u8请求下载时发生错误：" + sn + "-------" + e.toString());
+            e.printStackTrace();
+          } finally {// 关流
+            try {
+              if (is != null) {
+                is.close();
+              }
+              if (fos != null) {
+                fos.close();
+              }
+            } catch (Exception e) {
+              e.printStackTrace();
+            }
+          }
+        });
+
+        System.out.println("ts文件下载完毕!");
+        String fileName = sn + ".ts";
+        String filePath = hash + File.separator + sn + File.separator + fileName;
+        boolean b = mergeFiles(orderByName(folderPath), filePath, globalPath);
+        if (b) {
+          if (tsToMp4(globalPath + File.separator + filePath)) {
+            File tsFile = new File(globalPath + File.separator + filePath);
+            tsFile.delete();
+            String fileMp4Path = filePath.replace(".ts", ".mp4");
+            File mp4File = new File(globalPath + File.separator + fileMp4Path);
+            if (mp4File.exists()) {
+              return globalPath + File.separator + fileMp4Path;
+            }
+          }
+        }
+      }
+    } catch (Exception e) {
+      logger.error("下载失败：e {} SN {}", e.getMessage(), sn);
+      e.printStackTrace();
+    }
+    return "";
+  }
 
   public static String downloadM3u8(String globalPath, String sn, List<String> tsList) {
     int tsRepetCount = 5;

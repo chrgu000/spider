@@ -21,6 +21,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -49,7 +50,7 @@ public class ScuteCrawler extends BreadthCrawler {
       String seedUrl = String.format("http://www.s-cute.com/contents/?&page=%d", pageIndex);
       this.addSeed(seedUrl, "list");
     }
-    setThreads(50);
+    setThreads(1);
     getConf().setTopN(100);
 
   }
@@ -135,8 +136,9 @@ public class ScuteCrawler extends BreadthCrawler {
       String m3u8Url = getM3u8Url(
           new OkHttpUtils(API_2.replace("VIDEOSID", videoId) + token).addReferer(a).response()
               .body().byteStream());
+      String referer = "http://" + new URL(a).getHost();
       List<String> tsList = FileIOUtils.getTsList(a, m3u8Url);
-      fileName = FileIOUtils.downloadM3u8(GlobalConst.GLOBAL_PATH, sn, tsList);
+      fileName = FileIOUtils.downloadM3u8(GlobalConst.GLOBAL_PATH, sn, tsList, referer);
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -159,8 +161,11 @@ public class ScuteCrawler extends BreadthCrawler {
     return m3u8sList.get(m3u8sList.size() - 1).replaceAll("amp;", "");
   }
 
+  public static void main(String[] args) {
 
-  public static void main(String[] args) throws Exception {
+  }
+
+  public static void main1(String[] args) throws Exception {
     ScuteCrawler crawler = new ScuteCrawler(CrawlConst.CRAWL_PATH, false);
     crawler.getConf().setExecuteInterval(5000);
     crawler.getConf().set("title_prefix", "PREFIX_");
